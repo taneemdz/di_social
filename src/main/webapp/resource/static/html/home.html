@@ -1,0 +1,337 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="http://localhost:8081/di_social/resource/static/html/background.css" />
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <!--<script src="http://localhost:8080/di_social/resource/static/html/jquery.flip.js"></script>
+  <script src="http://localhost:8080/di_social/resource/static/html/jquery.flip.min.js"></script>-->
+  <script>
+  
+
+    $(document).ready(slide);
+        
+
+    count=1;
+    count1=1;
+    function slide()
+    {
+        //alert(document.getElementById("about").innerHTML);
+
+      document.images.again.src="http://localhost:8081/di_social/resource/static/html/"+count+".jpeg";
+
+      if(count<2)
+      {
+        count++;
+        
+      }
+      else
+      {
+        count =1;
+        
+      }
+      setTimeout("slide()",2000);
+    }
+    
+    function show()
+    {
+      document.getElementById("login").style.visibility="visible";
+      document.getElementById("go").style.visibility="visible";
+      $('#all').not("#login").fadeOut("slow");
+
+      $('html, body').css({
+
+          'overflow': 'hidden',
+          'height': '100%'
+      });
+    }
+
+    function check()
+    {
+      if(document.getElementById("a").checked)
+      {
+        $('#login_block').show(1000);
+        $('#signup_block').hide();
+        $("#password").focus();
+      }
+      else if(document.getElementById("b").checked)
+      {
+        $('#login_block').hide();
+        $('#signup_block').show(1000);
+        $("#newpassword").focus();
+      }
+    }
+    function go()
+    {
+      document.getElementById("login").style.visibility="hidden";
+      document.getElementById("go").style.visibility="hidden";
+      $('html, body').css({
+          'overflow': 'auto',
+          'height': 'auto'
+      });
+      //window.location = "home.html";
+      $('#all').not("#login").fadeIn("slow");
+    }
+/*    function flip()
+    {
+      setInterval("flip1()",4000);
+    }
+    j=0;
+    function flip1()
+    {
+      var dir = new Array();
+      dir[0] = "rl";
+      dir[1] = "bt";
+      dir[2] = "tb";
+      dir[3] = "lr";
+      var col = new Array();
+      col[0] = "black";
+      col[1] = "orange";
+      col[2] = "green";
+      col[3] = "red";
+      if(j<4)
+      {
+        $("#flipbox").flip({
+            direction: dir[j],
+            color: col[j],
+            content: "flipping"//(new Date()).getTime()    
+        });
+        j++;
+      }
+      else
+        j=0;           
+    }*/
+    
+  </script>
+<script>
+
+var bgimages=new Array()
+bgimages[0]="http://localhost:8081/di_social/resource/static/html/1.jpg"
+bgimages[1]="http://localhost:8081/di_social/resource/static/html/2.jpg"
+bgimages[2]="http://localhost:8081/di_social/resource/static/html/photo.jpg"
+
+//preload images
+var pathToImg=new Array()
+for (i=0;i<bgimages.length;i++){
+pathToImg[i]=new Image()
+pathToImg[i].src=bgimages[i]
+}
+
+var inc=-1;
+
+function bgSlide(){
+if (inc<bgimages.length-1)
+inc++
+else
+inc=0
+document.body.background=pathToImg[inc].src
+}
+
+if (document.all||document.getElementById)
+window.onload=new Function('setInterval("bgSlide()",10000)')
+
+</script>
+  <style>  
+  a{
+    text-decoration: none;
+  }
+  .header{
+    background: #252525;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999; 
+  }
+  header {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%; 
+  }
+  header:before, header:after {
+    content: " ";
+    display: table; 
+  }
+  header:after {
+    clear: both; 
+  }
+  header .nav {
+    font-size: 20px;
+    padding-left: 0.83333em;
+    padding-right: 0.83333em;
+    width: 70%;
+    float: left;
+    text-align: right; 
+  }
+  header .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; 
+  }
+
+  header .nav ul li {
+    display: inline-block; 
+  }
+  header .nav ul li a {
+    padding: 10px 15px;
+    font-family: "langdonregular";
+    font-weight: normal;
+    color: #dbd7ca;
+    line-height: 39px;
+    font-size: 1em;
+    -webkit-font-smoothing: antialiased;
+    -webkit-transition: 0.2s linear;
+    -moz-transition: 0.2s linear;
+    -o-transition: 0.2s linear;
+    transition: 0.2s linear;
+    text-transform: uppercase; 
+  }
+  header .nav ul li a:hover {
+    color: #a59275; 
+  } 
+  header .nav ul li a.selected {
+    color: #a59275; 
+  }
+  header .logo{
+    padding-left: 10em;
+    padding-right: 1em;
+    float:left;
+    width:100px;
+    height:50px;                   
+    content:url(http://localhost:8081/di_social/resource/static/html/digital.jpeg);
+  }          
+  body{ 
+    width:100%;
+    height:100%;
+    background-image:url(http://localhost:8081/di_social/resource/static/html/photo.jpg);
+    background-attachment: fixed;
+    background-repeat:no-repeat;     
+    background-size:cover;    
+    background-position: top center;
+  }
+  .info{
+    background: #dbd7ca;
+    margin-left:-10px;
+    padding: 0px;
+    clear: both;
+    position: absolute;
+    top: 750px;
+    width:100%;
+  }
+  .info .about{
+    font-size: 25px;
+    position:relative;
+    top:10px;
+    margin-right:50px;
+    text-align:right;
+  }
+  hr{
+    width:96%;
+    border-bottom: 1px solid #252525;
+    border-top:none;
+  }
+  .aboutus{
+    font-size: 20px;
+    float:right;
+    width:60%;
+    margin-right:10px;
+    padding-left: 10px; 
+  }
+  #again{
+    padding-left: 80px;
+    padding-bottom: 40px;
+    width:25%;
+    height:30%;
+  }
+  #login{
+    font-size: 20px;
+    position:absolute;
+    width:250px;
+    height:200px;
+    top:50%;
+    left:50%;
+    margin-top: -125px;
+    margin-left: -100px;
+    border:2px solid black;
+    text-align: center;
+    padding-top: 20px;
+  }
+  #go{
+    position:absolute;
+    top:28%;
+    left:60%;
+  }
+  #flipbox {
+    position:fixed;
+    left:10%;
+    top:20%;
+    background-color: green;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    font-family: 'ChunkFive Regular', Tahoma, Helvetica;
+    font-size: 2.5em;
+    color: #ffffff;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <section id="all">
+    <header class="header"> 
+      <div class="logo"></div>
+      <div class="nav">
+        <nav >
+          <ul class="global-nav">
+           <li><a href="#top" class="selected">Home</a></li>
+           <li><a href="#about" id="ab" class="">About</a></li>
+           <li><a href="/news">News</a></li>
+           <li><a href="mailto:.com" target="_blank">Contact</a></li>
+           <li><a onclick="show()">Login</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <ul class="cb-slideshow" style="list-style-type:none">
+            <li><span>Image 01</span><div><h3></h3></div></li>
+            <li><span>Image 02</span><div><h3></h3></div></li>
+            <li><span>Image 03</span><div><h3></h3></div></li>
+    </ul>
+    <div class="info">    
+        <div class="about" id="about">About Us</div><br>     
+        <div><hr></div><br>
+        <img id="again" src="" >
+        <div class="aboutus">
+          Digital Insight (DI) is one of the largest providers of outsourced online financial management (OFM) solutions to U.S. mid-market banks and credit unions,[1] with nearly 1,700 institutions served.
+          Applications offered by DI include consumer and business Internet banking, electronic bill payment and presentment, personal and small business online financial management, mobile banking, online account opening, funds transfer, and financial institution website development and hosting.
+        </div>  
+    </div>
+  </section>
+  <input id="go" type="submit" value="Go Back" style="visibility:hidden" onclick="go()">
+  <div id="login" style="visibility:hidden">
+    <form method="get" action="http://localhost:8081/di_social/resource/static/html/login.html">
+      <div >
+        <label for="email" style="color:green;">Email</label> <br/>
+        <input type="text" id="email" placeholder="Enter your email id" style="height:25px;width:170px;font-size:15px;"/><br />
+        <input id="a" type="radio" name="choose" value="i" onclick="check()" >I've a password<br>
+        <input id="b" type="radio" name="choose" value="new" onclick="check()">I am new!
+      </div>
+      <br>
+      <div id="login_block" style="display:none">
+        <label id="p" for="password" style="color:green;">Password</label><br />
+        <input type="password" name="password" id="password" placeholder="Enter your password" style="height:25px;width:170px;font-size:15px;"/><br/>
+        <input type="submit" value=" Login "/> 
+      </div>
+      <div id="signup_block" style="display:none">
+        <label id="pp" for="newpassword" style="color:green;">Choose password</label><br/>
+        <input type="password" name="newpassword" id="newpassword" placeholder="Enter new password" style="height:25px;width:170px;font-size:15px;"/><br/>
+        <input type="submit" value=" Signup "/>
+      </div>
+    </form>
+  </div>
+  <!--<div id="flipbox"></div>-->
+</body>
+</html>

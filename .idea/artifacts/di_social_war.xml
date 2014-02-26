@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="di_social:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="di_social.war">
+      <element id="artifact" artifact-name="di_social:war exploded" />
+    </root>
+  </artifact>
+</component>

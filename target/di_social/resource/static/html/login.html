@@ -1,0 +1,1329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Welcome</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<script>
+    $(function()
+    {
+        info=[];
+        $.ajax({
+            url: 'http://localhost:8081/di_social/resource/static/html/fiInfo',
+            type:'get',
+            success:function(fiInfo){
+
+                info=fiInfo.split('\n');
+                $( "input").autocomplete({
+                        open: function (event, ui) {
+                            $(this).data("uiAutocomplete").menu.element.addClass("yellow");
+                            $(this).data("uiAutocomplete").menu.element.width($('#input').width());
+                        },
+                        source: info,
+                        messages: { noResults:'', results: function() {} }
+                });
+            },
+            error:function(){}
+        });
+    });
+
+    $(document).ready(function()
+    {
+        a = "";
+        $("#go").on("click",function(){
+            var data = $("#input").val();
+            if(data)
+            {
+                try{
+                    $(container).remove();
+                    $(div_but).remove();
+                    $(_filter).remove();
+                    $(andiv).remove();
+                    $(div).remove();
+                    $('br').remove();
+                }
+                catch(err){}
+                var fid = data.split(',');
+                $.ajax({
+                    url: 'http://localhost:8081/di_social/message/'+fid[0],
+                    type: 'get',
+                    async: false,
+                    dataType: 'json',
+                    success: function(data){
+                        dat = data;
+                        var inc =10;
+                        $.ajax({
+                            url: 'http://localhost:8081/di_social/fiInfo/'+fid[0],
+                            type: 'get',
+                            async:false,
+                            success:function(one){
+                                a = one;
+                                container = document.createElement("div");
+                                container.id="container";
+                                container_bank= document.createElement("h1");
+
+                                br= document.createElement("br");
+                                span1= document.createElement("span");
+                                span2= document.createElement("span");
+
+                                container_name= document.createTextNode(fid[1]);
+                                container_state= document.createTextNode("State: " + one.state);
+                                container_phone= document.createTextNode("Phone: " + one.phoneNumber);
+                                container_bank.appendChild(container_name);
+                                container.appendChild(container_bank);
+                                span1.appendChild(container_state);
+                                container.appendChild(span1);
+                                container.appendChild(document.createElement("br"));
+
+                                span2.appendChild(container_phone);
+                                container.appendChild(span2);
+
+                                document.body.appendChild(container);
+
+                            },
+                            error:function(){}
+                        });
+
+                        andiv = document.createElement("div");
+                        andiv.id="andata";
+                        andiv.style.visibility='hidden';
+
+                        div_but = document.createElement("div");
+                        div_but.id="buttons";
+
+
+                        document.body.appendChild(document.createElement("br"));
+
+                        button1= document.createElement("button");
+                        button2= document.createElement("button");
+                        button1.id="facebook_button";
+                        button2.id="twitter_button";
+
+                        but1= document.createTextNode("FACEBOOK");
+                        but2= document.createTextNode("TWITTER");
+
+                        button1.appendChild(but1);
+                        button2.appendChild(but2);
+
+                        div_but.appendChild(button1);
+                        div_but.appendChild(button2);
+
+                        document.body.appendChild(div_but);
+
+                        _filter = document.createElement("select");
+                        _filter.id='filter';
+                        _filter.style.visibility='hidden';
+                        option2 = document.createElement("option");
+                        option3 = document.createElement("option");
+                        option4 = document.createElement("option");
+                        option5 = document.createElement("option");
+                        option6 = document.createElement("option");
+
+                        option2_data = document.createTextNode("Posts");
+                        option3_data = document.createTextNode("User posts");
+                        option4_data = document.createTextNode("Bank posts");
+                        option5_data = document.createTextNode("Positive posts");
+                        option6_data = document.createTextNode("Negative posts");
+
+                        option2.appendChild(option2_data);
+                        option3.appendChild(option3_data);
+                        option4.appendChild(option4_data);
+                        option5.appendChild(option5_data);
+                        option6.appendChild(option6_data);
+
+                        _filter.appendChild(option2);
+                        _filter.appendChild(option3);
+                        _filter.appendChild(option4);
+                        _filter.appendChild(option5);
+                        _filter.appendChild(option6);
+
+                        document.body.appendChild(_filter);
+                        document.body.appendChild(document.createElement("br"));
+
+                        a1= document.createElement("button");
+                        a2= document.createElement("button");
+                        a2.id="prev";
+                        a2.href="";
+                        andata1 = document.createTextNode("prev");
+                        a2.appendChild(andata1);
+                        andiv.appendChild(a2);
+                        a2.style.visibility='hidden';
+
+                        l1= document.createElement("button");
+                        l2= document.createElement("button");
+                        l3= document.createElement("button");
+                        l1.id="1";
+                        l2.id="2";
+                        l3.id="3";
+                        l1_data= document.createTextNode("1");
+                        l2_data= document.createTextNode("2");
+                        l3_data= document.createTextNode("3");
+                        l1.appendChild(l1_data);
+                        l2.appendChild(l2_data);
+                        l3.appendChild(l3_data);
+                        andiv.appendChild(l1);
+                        andiv.appendChild(l2);
+                        andiv.appendChild(l3);
+
+                        div = document.createElement("div");
+                        div.id = "data";
+                        div.style.visibility='hidden';
+                        ul=document.createElement("ul");
+                        div.appendChild(ul);
+
+                        document.body.appendChild(div);
+                        document.body.appendChild(document.createElement("br"));
+                        document.body.appendChild(andiv);
+
+                        _filter.addEventListener('change',function(){
+                            var options = {year: "numeric", month: "short",day: "numeric"/*, hour: "2-digit", minute: "2-digit"*/};
+                            e = document.getElementById("filter");
+                            selected = e.options[e.selectedIndex].text;
+
+                            if (selected === "User posts")
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                l1.id="1";
+                                l2.id="2";
+                                l3.id="3";
+                                l1.textContent="1";
+                                l2.textContent="2";
+                                l3.textContent="3";
+                                a1.style.visibility='visible';
+                                a2.style.visibility='hidden';
+                                $(ul).remove();
+                                n=0;
+                                incre=10;
+                                ul=document.createElement("ul");
+                                div.appendChild(ul);
+                                for (j=0;j<dat.length,n<incre;j++)
+                                {
+                                    if(dat[j].fromId != a.fbId)
+                                    {
+                                        li = document.createElement("li");
+                                        data1= document.createTextNode(dat[j].text);
+                                        li.appendChild(data1);
+                                        li.appendChild(document.createElement("br"));
+                                        li.appendChild(document.createElement("br"));
+
+                                        date = document.createElement("span");
+                                        date.id="date";
+                                        date_data = document.createTextNode(new Date(dat[j].createdTime*1000).toLocaleDateString("en-us", options));
+                                        date.appendChild(date_data);
+                                        li.appendChild(date);
+
+                                        senti = document.createElement("span");
+                                        senti.id="sentiment";
+                                        if(dat[j].sentiment>0)
+                                        {
+                                            senti_data = document.createTextNode("positive");
+
+                                            senti.style.color = "green";
+                                        }
+                                        else if(dat[j].sentiment<0)
+                                        {
+                                            senti_data = document.createTextNode("negative");
+
+                                            senti.style.color = "red";
+                                        }
+                                        else if(dat[j].sentiment == 0)
+                                        {
+                                            senti_data = document.createTextNode("neutral");
+
+                                            senti.style.color = "blue";
+                                        }
+                                        senti.appendChild(senti_data);
+
+                                        li.appendChild(senti);
+                                        li.appendChild(document.createElement("hr"));
+                                        ul.appendChild(li);
+                                        n++;
+                                    }
+                                }
+                            }
+                            else if (selected === "Bank posts")
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                l1.id="1";
+                                l2.id="2";
+                                l3.id="3";
+                                l1.textContent="1";
+                                l2.textContent="2";
+                                l3.textContent="3";
+                                a1.style.visibility='visible';
+                                a2.style.visibility='hidden';
+                                $(ul).remove();
+                                n=0;
+                                incre=10;
+                                ul=document.createElement("ul");
+                                div.appendChild(ul);
+                                for (j=0;j<dat.length,n<incre;j++)
+                                {
+                                    if(dat[j].fromId == a.fbId)
+                                    {
+                                        li = document.createElement("li");
+                                        data1= document.createTextNode(dat[j].text);
+                                        li.appendChild(data1);
+                                        li.appendChild(document.createElement("br"));
+                                        li.appendChild(document.createElement("br"));
+
+                                        date = document.createElement("span");
+                                        date.id="date";
+                                        date_data = document.createTextNode(new Date(dat[j].createdTime*1000).toLocaleDateString("en-us", options));
+                                        date.appendChild(date_data);
+                                        li.appendChild(date);
+
+                                        senti = document.createElement("span");
+                                        senti.id="sentiment";
+                                        if(dat[j].sentiment>0)
+                                        {
+                                            senti_data = document.createTextNode("positive");
+
+                                            senti.style.color = "green";
+                                        }
+                                        else if(dat[j].sentiment<0)
+                                        {
+                                            senti_data = document.createTextNode("negative");
+
+                                            senti.style.color = "red";
+                                        }
+                                        else if(dat[j].sentiment == 0)
+                                        {
+                                            senti_data = document.createTextNode("neutral");
+
+                                            senti.style.color = "blue";
+                                        }
+                                        senti.appendChild(senti_data);
+
+                                        li.appendChild(senti);
+                                        li.appendChild(document.createElement("hr"));
+                                        ul.appendChild(li);
+                                        n++;
+                                    }
+                                }
+                            }
+                            else if(selected == "Posts")
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                l1.id="1";
+                                l2.id="2";
+                                l3.id="3";
+                                l1.textContent="1";
+                                l2.textContent="2";
+                                l3.textContent="3";
+                                a1.style.visibility='visible';
+                                a2.style.visibility='hidden';
+                                $(ul).remove();
+                                n=0;
+                                incre=10;
+                                ul=document.createElement("ul");
+                                div.appendChild(ul);
+                                for (j=0;j<dat.length,n<incre;j++)
+                                {
+                                    li = document.createElement("li");
+                                    data1= document.createTextNode(dat[j].text);
+                                    li.appendChild(data1);
+                                    li.appendChild(document.createElement("br"));
+                                    li.appendChild(document.createElement("br"));
+
+                                    date = document.createElement("span");
+                                    date.id="date";
+                                    date_data = document.createTextNode(new Date(dat[j].createdTime*1000).toLocaleDateString("en-us", options));
+                                    date.appendChild(date_data);
+                                    li.appendChild(date);
+
+                                    senti = document.createElement("span");
+                                    senti.id="sentiment";
+
+                                    if(dat[i].sentiment>0)
+                                    {
+                                        senti_data = document.createTextNode("positive");
+
+                                        senti.style.color = "green";
+                                    }
+                                    else if(dat[i].sentiment<0)
+                                    {
+                                        senti_data = document.createTextNode("negative");
+
+                                        senti.style.color = "red";
+                                    }
+                                    else if(dat[i].sentiment == 0)
+                                    {
+                                        senti_data = document.createTextNode("neutral");
+
+                                        senti.style.color = "blue";
+                                    }
+                                    senti.appendChild(senti_data);
+                                    li.appendChild(senti);
+                                    li.appendChild(document.createElement("hr"));
+                                    ul.appendChild(li);
+                                    n++;
+                                }
+                            }
+                            else if (selected === "Positive posts")
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                l1.id="1";
+                                l2.id="2";
+                                l3.id="3";
+                                l1.textContent="1";
+                                l2.textContent="2";
+                                l3.textContent="3";
+                                a1.style.visibility='visible';
+                                a2.style.visibility='hidden';
+                                $(ul).remove();
+                                n=0;
+                                incre=10;
+                                ul=document.createElement("ul");
+                                div.appendChild(ul);
+                                for (j=0;j<dat.length,n<incre;j++)
+                                {
+                                    if(dat[j].sentiment > 0)
+                                    {
+                                        li = document.createElement("li");
+                                        data1= document.createTextNode(dat[j].text);
+                                        li.appendChild(data1);
+                                        li.appendChild(document.createElement("br"));
+                                        li.appendChild(document.createElement("br"));
+
+                                        date = document.createElement("span");
+                                        date.id="date";
+                                        date_data = document.createTextNode(new Date(dat[j].createdTime*1000).toLocaleDateString("en-us", options));
+                                        date.appendChild(date_data);
+                                        li.appendChild(date);
+
+                                        senti = document.createElement("span");
+                                        senti.id="sentiment";
+                                        if(dat[j].sentiment>0)
+                                        {
+                                            senti_data = document.createTextNode("positive");
+
+                                            senti.style.color = "green";
+                                        }
+                                        else if(dat[j].sentiment<0)
+                                        {
+                                            senti_data = document.createTextNode("negative");
+
+                                            senti.style.color = "red";
+                                        }
+                                        else if(dat[j].sentiment == 0)
+                                        {
+                                            senti_data = document.createTextNode("neutral");
+
+                                            senti.style.color = "blue";
+                                        }
+                                        senti.appendChild(senti_data);
+
+                                        li.appendChild(senti);
+                                        li.appendChild(document.createElement("hr"));
+                                        ul.appendChild(li);
+                                        n++;
+                                    }
+                                }
+                            }
+                            if (selected === "Negative posts")
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                l1.id="1";
+                                l2.id="2";
+                                l3.id="3";
+                                l1.textContent="1";
+                                l2.textContent="2";
+                                l3.textContent="3";
+                                a1.style.visibility='visible';
+                                a2.style.visibility='hidden';
+                                $(ul).remove();
+                                n=0;
+                                incre=10;
+                                ul=document.createElement("ul");
+                                div.appendChild(ul);
+                                for (j=0;j<dat.length,n<incre;j++)
+                                {
+                                    if(dat[j].sentiment < 0 )
+                                    {
+                                        li = document.createElement("li");
+                                        data1= document.createTextNode(dat[j].text);
+                                        li.appendChild(data1);
+                                        li.appendChild(document.createElement("br"));
+                                        li.appendChild(document.createElement("br"));
+
+                                        date = document.createElement("span");
+                                        date.id="date";
+                                        date_data = document.createTextNode(new Date(dat[j].createdTime*1000).toLocaleDateString("en-us", options));
+                                        date.appendChild(date_data);
+                                        li.appendChild(date);
+
+                                        senti = document.createElement("span");
+                                        senti.id="sentiment";
+                                        if(dat[j].sentiment>0)
+                                        {
+                                            senti_data = document.createTextNode("positive");
+
+                                            senti.style.color = "green";
+                                        }
+                                        else if(dat[j].sentiment<0)
+                                        {
+                                            senti_data = document.createTextNode("negative");
+
+                                            senti.style.color = "red";
+                                        }
+                                        else if(dat[j].sentiment == 0)
+                                        {
+                                            senti_data = document.createTextNode("neutral");
+
+                                            senti.style.color = "blue";
+                                        }
+                                        senti.appendChild(senti_data);
+
+                                        li.appendChild(senti);
+                                        li.appendChild(document.createElement("hr"));
+                                        ul.appendChild(li);
+                                        n++;
+                                    }
+                                }
+                            }
+                        });
+                        //For user posts
+                        check1=[]; nn1=0; jj1=0;
+
+                        for(y=0;y<dat.length;y++)
+                        {
+                            if(dat[y].fromId != a.fbId)
+                            {
+                                nn1++;
+                                if((nn1-1)%10==0)
+                                {
+                                    check1[jj1]=y;
+                                    //alert(check[jj]);
+                                    jj1++;
+                                }
+                            }
+                        }
+                        //For bank posts
+                        check2=[]; nn2=0; jj2=0;
+
+                        for(y=0;y<dat.length;y++)
+                        {
+                            if(dat[y].fromId == a.fbId)
+                            {
+                                nn2++;
+                                if((nn2-1)%10==0)
+                                {
+                                    check2[jj2]=y;
+                                    //alert(check[jj]);
+                                    jj2++;
+                                }
+                            }
+
+                        }
+
+                        check4=[]; nn1=0; jj1=0;
+
+                        for(y=0;y<dat.length;y++)
+                        {
+                            if(dat[y].sentiment > 0)
+                            {
+                                nn1++;
+                                if((nn1-1)%10==0)
+                                {
+                                    check4[jj1]=y;
+                                    //alert(check[jj]);
+                                    jj1++;
+                                }
+                            }
+                        }
+
+                        check5=[]; nn1=0; jj1=0;
+
+                        for(y=0;y<dat.length;y++)
+                        {
+                            if(dat[y].sentiment < 0)
+                            {
+                                nn1++;
+                                if((nn1-1)%10==0)
+                                {
+                                    check5[jj1]=y;
+                                    //alert(check[jj]);
+                                    jj1++;
+                                }
+                            }
+                        }
+                        andiv.onclick=function(event){
+                            var options = { year: "numeric", month: "short",day: "numeric" };
+                            e = document.getElementById("filter");
+                            selected = e.options[e.selectedIndex].text;
+
+                            if(event.target.id == "next")
+                            {
+
+                                if(selected == "User posts")
+                                {
+
+                                    a1.style.visibility='visible';
+                                    if(l3.id<check1.length)
+                                    {
+                                        $(l1).removeAttr("disabled");
+                                        $(l2).removeAttr("disabled");
+                                        $(l3).removeAttr("disabled");
+
+                                        a2.style.visibility='visible';
+                                        l1.id = parseInt(l1.id) + 3;
+                                        l2.id = parseInt(l2.id) + 3;
+                                        l3.id = parseInt(l3.id) + 3;
+                                        l1.innerHTML=parseInt(l1.innerHTML)+3;
+                                        l2.innerHTML=parseInt(l2.innerHTML)+3;
+                                        l3.innerHTML=parseInt(l3.innerHTML)+3;
+                                        if(!check1[l1.id])
+                                        {
+                                            $(l1).attr('disabled','disabled');
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check1[l2.id])
+                                        {
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check1[l3.id])
+                                        {
+
+                                            $(l3).attr('disabled','disabled');
+                                        }
+
+                                    }
+                                    else
+                                        a1.style.visibility='hidden';
+                                }
+                                else if(selected == "Bank posts")
+                                {
+                                    a1.style.visibility='visible';
+                                    if(l3.id<check2.length)
+                                    {
+                                        $(l1).removeAttr("disabled");
+                                        $(l2).removeAttr("disabled");
+                                        $(l3).removeAttr("disabled");
+
+                                        a2.style.visibility='visible';
+                                        l1.id = parseInt(l1.id) + 3;
+                                        l2.id = parseInt(l2.id) + 3;
+                                        l3.id = parseInt(l3.id) + 3;
+                                        l1.innerHTML=parseInt(l1.innerHTML)+3;
+                                        l2.innerHTML=parseInt(l2.innerHTML)+3;
+                                        l3.innerHTML=parseInt(l3.innerHTML)+3;
+                                        if(!check2[l1.id])
+                                        {
+                                            $(l1).attr('disabled','disabled');
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check2[l2.id])
+                                        {
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check2[l3.id])
+                                        {
+
+                                            $(l3).attr('disabled','disabled');
+                                        }
+
+                                    }
+                                    else
+                                        a1.style.visibility='hidden';
+                                }
+                                else if(selected == "Posts")
+                                {
+                                    a1.style.visibility='visible';
+                                    if(l3.id<(dat.length/10))
+                                    {
+                                        $(l1).removeAttr("disabled");
+                                        $(l2).removeAttr("disabled");
+                                        $(l3).removeAttr("disabled");
+
+                                        a2.style.visibility='visible';
+                                        l1.id = parseInt(l1.id) + 3;
+                                        l2.id = parseInt(l2.id) + 3;
+                                        l3.id = parseInt(l3.id) + 3;
+                                        l1.innerHTML=parseInt(l1.innerHTML)+3;
+                                        l2.innerHTML=parseInt(l2.innerHTML)+3;
+                                        l3.innerHTML=parseInt(l3.innerHTML)+3;
+                                    }
+                                    else
+                                        a1.style.visibility='hidden';
+                                }
+                                else if(selected == "Positive posts")
+                                {
+
+                                    a1.style.visibility='visible';
+                                    if(l3.id<check4.length)
+                                    {
+                                        $(l1).removeAttr("disabled");
+                                        $(l2).removeAttr("disabled");
+                                        $(l3).removeAttr("disabled");
+
+                                        a2.style.visibility='visible';
+                                        l1.id = parseInt(l1.id) + 3;
+                                        l2.id = parseInt(l2.id) + 3;
+                                        l3.id = parseInt(l3.id) + 3;
+                                        l1.innerHTML=parseInt(l1.innerHTML)+3;
+                                        l2.innerHTML=parseInt(l2.innerHTML)+3;
+                                        l3.innerHTML=parseInt(l3.innerHTML)+3;
+                                        if(!check4[l1.id])
+                                        {
+                                            $(l1).attr('disabled','disabled');
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check4[l2.id])
+                                        {
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check4[l3.id])
+                                        {
+
+                                            $(l3).attr('disabled','disabled');
+                                        }
+
+                                    }
+                                    else
+                                        a1.style.visibility='hidden';
+                                }
+                                else if(selected == "Negative posts")
+                                {
+
+                                    a1.style.visibility='visible';
+                                    if(l3.id<check5.length)
+                                    {
+                                        $(l1).removeAttr("disabled");
+                                        $(l2).removeAttr("disabled");
+                                        $(l3).removeAttr("disabled");
+
+                                        a2.style.visibility='visible';
+                                        l1.id = parseInt(l1.id) + 3;
+                                        l2.id = parseInt(l2.id) + 3;
+                                        l3.id = parseInt(l3.id) + 3;
+                                        l1.innerHTML=parseInt(l1.innerHTML)+3;
+                                        l2.innerHTML=parseInt(l2.innerHTML)+3;
+                                        l3.innerHTML=parseInt(l3.innerHTML)+3;
+                                        if(!check5[l1.id])
+                                        {
+                                            $(l1).attr('disabled','disabled');
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check5[l2.id])
+                                        {
+                                            $(l2).attr('disabled','disabled');
+                                            $(l3).attr('disabled','disabled');
+                                        }
+                                        else if(!check5[l3.id])
+                                        {
+
+                                            $(l3).attr('disabled','disabled');
+                                        }
+
+                                    }
+                                    else
+                                        a1.style.visibility='hidden';
+                                }
+                            }
+                            else if(event.target.id == "prev")
+                            {
+
+
+                                if(l1.id>3)
+                                {
+                                    $(l1).removeAttr("disabled");
+                                    $(l2).removeAttr("disabled");
+                                    $(l3).removeAttr("disabled");
+                                    a1.style.visibility='visible';
+                                    l1.id = parseInt(l1.id) - 3;
+                                    l2.id = parseInt(l2.id) - 3;
+                                    l3.id = parseInt(l3.id) - 3;
+                                    l1.innerHTML=parseInt(l1.innerHTML)-3;
+                                    l2.innerHTML=parseInt(l2.innerHTML)-3;
+                                    l3.innerHTML=parseInt(l3.innerHTML)-3;
+                                }
+                                else
+                                    a2.style.visibility='hidden';
+                            }
+                            else
+                            {
+                                $(l1).removeAttr("disabled");
+                                $(l2).removeAttr("disabled");
+                                $(l3).removeAttr("disabled");
+
+                                if(event.target.id+0-10<dat.length)
+                                {
+                                    e = document.getElementById("filter");
+                                    selected = e.options[e.selectedIndex].text;
+
+                                    if(selected == "User posts")
+                                    {
+                                        $(ul).remove();
+                                        ul=document.createElement("ul");
+                                        div.appendChild(ul);
+                                        n=0;
+                                        //for(i=event.target.id+0-10;i<event.target.id+0;i++)
+                                        //for (i=i;i<dat.length,n<10;i++)
+                                        for(i=check1[event.target.id-1];i<dat.length,n<10;i++)
+                                        {
+                                            if(dat[i].fromId != a.fbId )
+                                            {
+                                                li = document.createElement("li");
+                                                data1= document.createTextNode(dat[i].text);
+                                                li.appendChild(data1);
+                                                li.appendChild(document.createElement("br"));
+                                                li.appendChild(document.createElement("br"));
+
+                                                date = document.createElement("span");
+                                                date.id="date";
+                                                date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                                date.appendChild(date_data);
+                                                li.appendChild(date);
+
+                                                senti = document.createElement("span");
+                                                senti.id="sentiment";
+
+                                                if(dat[i].sentiment>0)
+                                                {
+                                                    senti_data = document.createTextNode("positive");
+
+                                                    senti.style.color = "green";
+                                                }
+                                                else if(dat[i].sentiment<0)
+                                                {
+                                                    senti_data = document.createTextNode("negative");
+
+                                                    senti.style.color = "red";
+                                                }
+                                                else if(dat[i].sentiment == 0)
+                                                {
+                                                    senti_data = document.createTextNode("neutral");
+
+                                                    senti.style.color = "blue";
+                                                }
+                                                senti.appendChild(senti_data);
+                                                li.appendChild(senti);
+                                                li.appendChild(document.createElement("hr"));
+                                                ul.appendChild(li);
+                                                n++;
+                                            }
+                                        }
+                                    }
+                                    else if(selected == "Bank posts")
+                                    {
+                                        $(ul).remove();
+                                        ul=document.createElement("ul");
+                                        div.appendChild(ul);
+                                        n=0;
+                                        //for(i=event.target.id+0-10;i<event.target.id+0;i++)
+                                        // for (i=i;i<dat.length,n<10;i++)
+                                        for(i=check2[event.target.id-1];i<dat.length,n<10;i++)
+                                        {
+                                            if(dat[i].fromId == a.fbId)
+                                            {
+                                                li = document.createElement("li");
+                                                data1= document.createTextNode(dat[i].text);
+                                                li.appendChild(data1);
+                                                li.appendChild(document.createElement("br"));
+                                                li.appendChild(document.createElement("br"));
+
+                                                date = document.createElement("span");
+                                                date.id="date";
+                                                date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                                date.appendChild(date_data);
+                                                li.appendChild(date);
+
+                                                senti = document.createElement("span");
+                                                senti.id="sentiment";
+
+
+                                                if(dat[i].sentiment>0)
+                                                {
+                                                    senti_data = document.createTextNode("positive");
+                                                    senti.style.color = "green";
+                                                }
+                                                else if(dat[i].sentiment<0)
+                                                {
+                                                    senti_data = document.createTextNode("negative");
+
+                                                    senti.style.color = "red";
+                                                }
+                                                else if(dat[i].sentiment == 0)
+                                                {
+                                                    senti_data = document.createTextNode("neutral");
+
+                                                    senti.style.color = "blue";
+                                                }
+                                                senti.appendChild(senti_data);
+                                                li.appendChild(senti);
+                                                li.appendChild(document.createElement("hr"));
+                                                ul.appendChild(li);
+                                                n++;
+                                            }
+                                        }
+                                    }
+                                    else if(selected == "Posts")
+                                    {
+                                        (ul).remove();
+                                        ul=document.createElement("ul");
+                                        div.appendChild(ul);
+                                        n=0;
+                                        //for (i=i;i<dat.length,n<10;i++)
+                                        for(i=event.target.id+0-10;i<event.target.id+0;i++)
+                                        {
+                                            li = document.createElement("li");
+                                            data1= document.createTextNode(dat[i].text);
+                                            li.appendChild(data1);
+                                            li.appendChild(document.createElement("br"));
+                                            li.appendChild(document.createElement("br"));
+
+                                            date = document.createElement("span");
+                                            date.id="date";
+                                            date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                            date.appendChild(date_data);
+                                            li.appendChild(date);
+
+                                            senti = document.createElement("span");
+                                            senti.id="sentiment";
+
+                                            if(dat[i].sentiment>0)
+                                            {
+                                                senti_data = document.createTextNode("positive");
+
+                                                senti.style.color = "green";
+                                            }
+                                            else if(dat[i].sentiment<0)
+                                            {
+                                                senti_data = document.createTextNode("negative");
+
+                                                senti.style.color = "red";
+                                            }
+                                            else if(dat[i].sentiment == 0)
+                                            {
+                                                senti_data = document.createTextNode("neutral");
+
+                                                senti.style.color = "blue";
+                                            }
+                                            senti.appendChild(senti_data);
+                                            li.appendChild(senti);
+                                            li.appendChild(document.createElement("hr"));
+                                            ul.appendChild(li);
+                                            n++;
+                                        }
+                                    }
+                                    else if(selected == "Positive posts")
+                                    {
+                                        $(ul).remove();
+                                        ul=document.createElement("ul");
+                                        div.appendChild(ul);
+                                        n=0;
+                                        //for(i=event.target.id+0-10;i<event.target.id+0;i++)
+                                        //for (i=i;i<dat.length,n<10;i++)
+                                        for(i=check1[event.target.id-1];i<dat.length,n<10;i++)
+                                        {
+                                            if(dat[i].sentiment > 0)
+                                            {
+                                                li = document.createElement("li");
+                                                data1= document.createTextNode(dat[i].text);
+                                                li.appendChild(data1);
+                                                li.appendChild(document.createElement("br"));
+                                                li.appendChild(document.createElement("br"));
+
+                                                date = document.createElement("span");
+                                                date.id="date";
+                                                date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                                date.appendChild(date_data);
+                                                li.appendChild(date);
+
+                                                senti = document.createElement("span");
+                                                senti.id="sentiment";
+
+                                                if(dat[i].sentiment>0)
+                                                {
+                                                    senti_data = document.createTextNode("positive");
+
+                                                    senti.style.color = "green";
+                                                }
+                                                else if(dat[i].sentiment<0)
+                                                {
+                                                    senti_data = document.createTextNode("negative");
+
+                                                    senti.style.color = "red";
+                                                }
+                                                else if(dat[i].sentiment == 0)
+                                                {
+                                                    senti_data = document.createTextNode("neutral");
+
+                                                    senti.style.color = "blue";
+                                                }
+                                                senti.appendChild(senti_data);
+                                                li.appendChild(senti);
+                                                li.appendChild(document.createElement("hr"));
+                                                ul.appendChild(li);
+                                                n++;
+                                            }
+                                        }
+                                    }
+                                    else if(selected == "Negative posts")
+                                    {
+                                        $(ul).remove();
+                                        ul=document.createElement("ul");
+                                        div.appendChild(ul);
+                                        n=0;
+                                        //for(i=event.target.id+0-10;i<event.target.id+0;i++)
+                                        //for (i=i;i<dat.length,n<10;i++)
+                                        for(i=check1[event.target.id-1];i<dat.length,n<10;i++)
+                                        {
+                                            if(dat[i].sentiment < 0 )
+                                            {
+                                                li = document.createElement("li");
+                                                data1= document.createTextNode(dat[i].text);
+                                                li.appendChild(data1);
+                                                li.appendChild(document.createElement("br"));
+                                                li.appendChild(document.createElement("br"));
+
+                                                date = document.createElement("span");
+                                                date.id="date";
+                                                date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                                date.appendChild(date_data);
+                                                li.appendChild(date);
+
+                                                senti = document.createElement("span");
+                                                senti.id="sentiment";
+
+                                                if(dat[i].sentiment>0)
+                                                {
+                                                    senti_data = document.createTextNode("positive");
+
+                                                    senti.style.color = "green";
+                                                }
+                                                else if(dat[i].sentiment<0)
+                                                {
+                                                    senti_data = document.createTextNode("negative");
+
+                                                    senti.style.color = "red";
+                                                }
+                                                else if(dat[i].sentiment == 0)
+                                                {
+                                                    senti_data = document.createTextNode("neutral");
+
+                                                    senti.style.color = "blue";
+                                                }
+                                                senti.appendChild(senti_data);
+                                                li.appendChild(senti);
+                                                li.appendChild(document.createElement("hr"));
+                                                ul.appendChild(li);
+                                                n++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        a1.id="next";
+                        a1.href="";
+                        andata = document.createTextNode("next");
+                        a1.appendChild(andata);
+                        andiv.appendChild(a1);
+
+                        if(button1)
+                        {
+                            var options = {year: "numeric", month: "short", day: "numeric" };
+                            button1.onclick=function(event){
+                                if(dat.length > 0)
+                                {
+                                    button1.style.backgroundColor="#669966";
+                                    button2.style.backgroundColor="white";
+
+                                    _filter.style.visibility="visible";
+                                    div.style.visibility="visible";
+                                    andiv.style.visibility='visible';
+                                    $('#data').css('visibility','visible').hide().fadeIn('slow');
+
+                                    for(i=0;i<inc;i++)
+                                    {
+                                        li = document.createElement("li");
+                                        data1= document.createTextNode(dat[i].text);
+                                        li.appendChild(data1);
+                                        li.appendChild(document.createElement("br"));
+                                        li.appendChild(document.createElement("br"));
+
+                                        date = document.createElement("span");
+                                        date.id="date";
+                                        date_data = document.createTextNode(new Date(dat[i].createdTime*1000).toLocaleDateString("en-us", options));
+                                        date.appendChild(date_data);
+                                        li.appendChild(date);
+
+                                        senti = document.createElement("span");
+                                        senti.id="sentiment";
+
+                                        if(dat[i].sentiment>0)
+                                        {
+                                            senti_data = document.createTextNode("positive");
+
+                                            senti.style.color = "green";
+                                        }
+                                        else if(dat[i].sentiment<0)
+                                        {
+                                            senti_data = document.createTextNode("negative");
+
+                                            senti.style.color = "red";
+                                        }
+                                        else if(dat[i].sentiment == 0)
+                                        {
+                                            senti_data = document.createTextNode("neutral");
+
+                                            senti.style.color = "blue";
+                                        }
+                                        senti.appendChild(senti_data);
+                                        li.appendChild(senti);
+                                        li.appendChild(document.createElement("hr"));
+                                        ul.appendChild(li);
+                                    }
+                                    inc=0;
+                                }
+                                else
+                                {
+                                    button1.style.backgroundColor="#CC3439";
+                                    div.style.visibility="visible";
+                                    document.getElementById("data").innerHTML="data not found";
+                                }
+                            };
+                        }
+                    },
+                    error: function()
+                    {
+                        alert('error!');
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+<style>
+    .yellow
+    {
+        background-color: rgb(255, 255, 255);
+        color:black;
+        list-style-type: none;
+        display: block;
+        padding: 0px;
+        border:3px solid black;
+        height: 200px;
+        overflow:scroll;
+    }
+    .yellow li
+    {
+        padding:10px 0px 10px 5px;
+        border-bottom:1px solid black;
+        margin: 0px;
+        font-size: 15px;
+    }
+    .yellow li:hover
+    {
+        color:black;
+        cursor: pointer;
+        background-color: #ffcc00;
+    }
+    a
+    {
+        text-decoration: none;
+    }
+    .header
+    {
+        background: #333333; /* #252525 */
+        padding: 15px 0;
+        top: 50px;
+        left: 20px;
+        right:20px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 0;
+        margin-bottom: 0;
+        width: 100%;
+        height:50px;
+        border-bottom:4px solid #bf3d33;
+    }
+    .header .logo
+    {
+        padding-left: 10em;
+        float:left;
+        content:url('digital.jpeg');
+        height: 50px;
+        width: 100px;
+        float: left;
+    }
+    .input1
+    {
+        height: 30px;
+        padding-left: 35em;
+    }
+    #input
+    {
+        height:30px;
+        font-size: 17px;
+        background-color: white;
+        color:black;
+        border: 0px;
+        padding:5px;
+    }
+    #go
+    {
+        width:50px;
+        height:35px;
+        border:0px;
+        font-size: 12px;
+        background: #ffcc00;
+        color:black;
+        padding: 0;
+        margin: 0;
+    }
+    #go:focus,#input:focus
+    {
+        outline:none;
+    }
+    #go:hover
+    {
+        background-color: #5d9ed1;
+        color:white;
+    }
+    #container
+    {
+        width:70%;
+        position:relative;
+        left:50%;
+        margin-left: -35%;
+        background-color: #ffffff; /*#409f89 */
+        text-align: center;
+        margin-top:10px;
+        padding:10px;
+        color: black;
+        text-transform: uppercase;
+    }
+    h1
+    {
+        text-align:center;
+        font-family:"Times New Roman",Times,serif;
+    }
+    body
+    {
+        margin-top:0px;
+        margin-bottom:100px;
+        margin-left:0px;
+        margin-right:0px;
+        background: rgb(172, 172, 172);
+    }
+    #data
+    {
+        width:70%;
+        position:relative;
+        left:50%;
+        margin-left: -35%;
+        padding:10px;
+        background-color: rgb(255, 255, 255);
+        color:black;
+        border:0px solid #669966;
+    }
+    #data ul
+    {
+        list-style: none;
+        border-radius:5px;
+    }
+    #data ul li
+    {
+        padding-top:0px;
+        padding-bottom: 10px;
+        border-bottom:0px solid black;
+    }
+    a
+    {
+        text-decoration: none;
+    }
+    #data ul li span
+    {
+        color: #5b25ff;
+    }
+    #andata
+    {
+        width:70%;
+        height:20px;
+        margin:0 auto;
+        color: #adffd5;
+        text-align:right;
+    }
+    #facebook_button,#twitter_button
+    {
+        width:120px;
+        height:30px;
+        margin:10px;
+        position: relative;
+        left: -50%;
+        font-size: 12px;
+    }
+    button
+    {
+        border:0px;
+        background-color: white;
+    }
+    button:hover
+    {
+        box-shadow: 3px 3px 3px black;
+        cursor: pointer;
+    }
+    #buttons
+    {
+        position:relative;
+        left:50%;
+        text-align:center;
+    }
+    button:focus
+    {
+        outline:none;
+    }
+    hr
+    {
+        border-color: #669966;
+    }
+    #filter
+    {
+        position:relative;
+        left:75%;
+    }
+    #sentiment
+    {
+        float:right;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"></div>
+        <div class="input1">
+            <input type="text" id="input" placeholder="Enter Bank name or ID" size="50">&nbsp;&nbsp;
+            <button id="go"><b>Search</b></button>
+        </div>
+    </div>
+</body>
+</html>
